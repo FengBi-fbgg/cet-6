@@ -220,7 +220,7 @@ function cloudFetch(body,cb){
 }
 function cloudPush(){
   if(!CLOUD_ON)return;
-  cloudFetch({read:L(READ,[]),words:getUD(),log:CLOUD_LOG_PUSHED},function(){});
+  cloudFetch({read:L(READ,[]),words:getUD(),rec:L(REC,[]),log:CLOUD_LOG_PUSHED},function(){});  cloudFetch({read:L(READ,[]),words:getUD(),rec:L(REC,[]),log:CLOUD_LOG_PUSHED},function(){});
   CLOUD_LOG_PUSHED=[];
 }
 function cloudPull(){
