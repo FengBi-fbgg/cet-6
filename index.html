@@ -220,7 +220,7 @@ function cloudFetch(body,cb){
 }
 function cloudPush(){
   if(!CLOUD_ON)return;
-  cloudFetch({read:L(READ,[]),words:getUD(),rec:L(REC,[]),log:CLOUD_LOG_PUSHED},function(){});  cloudFetch({read:L(READ,[]),words:getUD(),rec:L(REC,[]),log:CLOUD_LOG_PUSHED},function(){});
+   cloudFetch({read:L(READ,[]),words:getUD(),rec:L(REC,[]),log:CLOUD_LOG_PUSHED},function(){});
   CLOUD_LOG_PUSHED=[];
 }
 function cloudPull(){
@@ -238,6 +238,15 @@ function cloudPull(){
       else{d[k]=z;changed2=true}
     });
     if(changed2){saveUD(d);renderUD()}
+    // 最近随机到的文章也同步（云端为准，补上本地独有的）
+    var jRec=Array.isArray(j.rec)?j.rec.slice():[];
+    var localRec=L(REC,[]);
+    localRec.forEach(function(id){ if(id&&jRec.indexOf(id)<0) jRec.push(id); });
+    var oldRec=L(REC,[]);
+    var recChanged=false;
+    if(jRec.length!==oldRec.length){recChanged=true}
+    else{for(var ii=0;ii<jRec.length;ii++){if(jRec[ii]!==oldRec[ii]){recChanged=true;break}}}
+    if(recChanged){S(REC,jRec.slice(0,6));refreshLists()}
     renderCloudLog(j.log||[]);
   });
 }
